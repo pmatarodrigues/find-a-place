@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  api:
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && ruby main.rb"
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+
+  test:
+    build: .
+    volumes:
+      - .:/app
+    command: bash -c "bundle exec rspec"
+    
