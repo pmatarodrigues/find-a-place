@@ -5,16 +5,17 @@ class IdentifyDifferentPlacesInteractor
     different_places = {}
 
     recent_places.each do |checksum, place|
-
-      different_places[checksum] = {
-        diff: 'new',
-        place: place,
-      } unless previous_places[checksum]
-      
-      different_places[checksum] = {
-        diff: 'updated',
-        place: place,
-      } if changed?(checksum, previous_places[checksum])
+      if !previous_places[checksum]
+        different_places[checksum] = {
+          diff: 'new',
+          place: place,
+        }
+      elsif changed?(place)
+        different_places[checksum] = {
+          diff: 'updated',
+          place: place,
+        }
+      end
 
       previous_places.delete(checksum)
     end
@@ -34,9 +35,11 @@ class IdentifyDifferentPlacesInteractor
 
   private
 
-  def changed?(checksum, place)
-    return false if (checksum.nil? || place.nil?)
+  def changed?(current_place)
+    return false if (current_place.nil? || current_place[:previous_checksum].nil?)
+
+    place_to_get_checksum = current_place.except(:previous_checksum)
     
-    checksum != Digest::MD5.hexdigest(Marshal.dump(place.to_s))
+    current_place[:previous_checksum] != Digest::MD5.hexdigest(Marshal.dump(place_to_get_checksum.to_s))
   end
 end
