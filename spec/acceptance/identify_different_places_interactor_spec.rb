@@ -66,14 +66,46 @@ describe IdentifyDifferentPlacesInteractor do
 
         expect(different_places).to eq(
           {
-            new_place_checksum => new_place_data
+            new_place_checksum => {
+              diff: 'new',
+              place: new_place_data,
+            }
           }
         )
       end
     end
 
     context 'when an existing place was changed' do
+      let(:updated_place_data) do
+        {
+          title: 'Apartamento T1 para arrendamento Zona Nobre',
+          topology: 'T1',
+          price: '900',
+          url: 'https://www.imovirtual.com/pt/anuncio/apartamento-t1-para-arrendamento-zona-nobre-ID18dOH.html#51f25bc3c8'
+        }
+      end
+      let(:updated_place_checksum) do
+        '716fea2581c2862844c9ab068b0c2ccd'
+      end
+      
       it 'sends a message with updated places' do
+        recent_places_result = previous_places_result.dup
+        recent_places_result[updated_place_checksum] = updated_place_data
+
+        different_places = identify_different_places_interactor.call(
+          name: aggregator.name,
+          previous_places: previous_places_result,
+          recent_places: recent_places_result
+        )
+
+        expect(different_places).to eq(
+          {
+            updated_place_checksum => {
+              diff: 'updated',
+              place: updated_place_data,
+            }
+          }
+        )
       end
     end
 
