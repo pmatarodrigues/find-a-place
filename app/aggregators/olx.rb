@@ -9,7 +9,6 @@ OLX = Scraper.new(
     section: '.offers',
     result: '.offer',
     result_title: '.title-cell a > strong',
-    result_topology: '.title-cell a > strong',
     result_price: '.price strong',
     result_url: '.title-cell a'
   },

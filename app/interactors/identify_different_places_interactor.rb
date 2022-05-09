@@ -5,7 +5,7 @@ class IdentifyDifferentPlacesInteractor
     different_places = {}
 
     recent_places.each do |checksum, place|
-      if !previous_places[checksum]
+      if previous_places.nil? || !previous_places[checksum]
         different_places[checksum] = {
           diff: 'new',
           place: place,
