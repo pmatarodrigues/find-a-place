@@ -1,14 +1,5 @@
-version: "3.9"
+version: '3'
 services:
-  api:
+  script:
     build: .
-    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
-    volumes:
-      - .:/app
-    ports:
-      - "3000:3000"
-  test:
-    build: .
-    volumes:
-      - .:/app
-    command: bash -c "bundle exec rspec"
+    command: java -jar script.jar
